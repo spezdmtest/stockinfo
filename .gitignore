@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+sql-qeries.sql
+.env_DB_ADDRESS
+docker-compose.yml
+src/main/resources/schema.sql
+src/main/resources/triggers.sql
+
+# Exclude all
+/*
+
+# Include manifest directories
+!/resources/
+!/clusters/
+!/infrastructure/
