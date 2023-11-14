@@ -1,0 +1,42 @@
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        r2dbc: TRACE
+scheduling:
+  enabled: false
+
+local:
+  db:
+    url: localhost:5432/stocks-db
+    username: postgres
+    password: asdqwe123
+
+spring:
+  codec:
+    max-in-memory-size: 10MB
+  r2dbc:
+    url: r2dbc:postgresql://${local.db.url}
+    username: ${local.db.username}
+    password: ${local.db.password}
+    pool:
+      enabled: true
+      initial-size: 10
+      max-size: 20
+  flyway:
+    url: jdbc:postgresql://${local.db.url}
+    locations: classpath:db/migration
+    user: ${local.db.username}
+    password: ${local.db.password}
+    baseline-on-migrate: true
+
+api:
+  external:
+    ref-data-url: https://api.iex.cloud/v1/data/core/ref_data?token={token}
+    stock-data-url: https://api.iex.cloud/v1/data/core/quote/{symbol}?token={token}
+    token: pk_c6a55724465f474497d508f6d26dafa9
+
+service:
+    number-of-companies: 200
+
+

@@ -38,7 +38,7 @@ src/main/resources/schema.sql
 src/main/resources/triggers.sql
 
 # Exclude all
-/*
+#/*
 
 # Include manifest directories
 !/resources/
