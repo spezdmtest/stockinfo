@@ -34,7 +34,7 @@ api:
   external:
     ref-data-url: https://api.iex.cloud/v1/data/core/ref_data?token={token}
     stock-data-url: https://api.iex.cloud/v1/data/core/quote/{symbol}?token={token}
-    token: pk_c6a55724465f474497d508f6d26dafa9
+    token: pk_eae34239400b4e6d8cd68354c2e27f70
 
 service:
     number-of-companies: 200
