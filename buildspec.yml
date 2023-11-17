@@ -5,12 +5,12 @@
 #--------------------------------------------------------------
 version: 0.2
 
-env:
-  variables:
-    AWS_DEFAULT_REGION: "eu-central-1"
-    AWS_ACCOUNT_ID: "636970537472"
-    ECR_REPO_NAME: "stockinfo"
-    ECR_IMAGE_TAG: "latest"
+#env:
+#  variables:
+#    AWS_DEFAULT_REGION: "eu-central-1"
+#    AWS_ACCOUNT_ID: "636970537472"
+#    ECR_REPO_NAME: "stockinfo"
+#    ECR_IMAGE_TAG: "latest"
 
 phases:
   # steps:
