@@ -1,0 +1,59 @@
+#--------------------------------------------------------------
+# Simple AWS CodeBuild Config File
+#
+# Copyleft (c) by Dmytro Ostapenko
+#--------------------------------------------------------------
+version: 0.2
+
+#env:
+#  variables:
+#    AWS_DEFAULT_REGION: "eu-central-1"
+#    AWS_ACCOUNT_ID: "636970537472"
+#    ECR_REPO_NAME: "stockinfo"
+#    ECR_IMAGE_TAG: "latest"
+
+phases:
+  # steps:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - echo Installing necessary library.....
+      - curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
+      - curl -sS -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.27.4/2023-08-16/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl ./aws-iam-authenticator
+      - export PATH=$PWD/:$PATH
+      - apt-get update && apt-get -y install jq python3-pip python3-dev && pip3 install --upgrade awscli
+
+pre_build:
+  commands:
+    - echo "Logging in to Amazon ECR..."
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION| docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+    - COMMIT_ID=$(git rev-parse --short HEAD)
+
+build:
+  commands:
+    - echo Running MVN INSTALL...
+    - mvn install
+    - echo Building the Docker image...
+    - docker build -t $ECR_REPO_NAME:$ECR_IMAGE_TAG .
+    - docker tag $ECR_REPO_NAME:$ECR_IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$ECR_IMAGE_TAG
+    - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$COMMIT_ID
+
+post_build:
+  commands:
+    - echo Pushing the Docker image...
+    - echo AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID
+    - echo AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+    - echo ECR_REPO_NAME: $ECR_REPO_NAME
+    - echo ECR_IMAGE_TAG: $ECR_IMAGE_TAG
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$ECR_IMAGE_TAG
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$COMMIT_ID
+
+cache:
+  paths:
+    - '/root/.m2/**/*'
+
+#artifacts:
+#  files:
+#    - deployment/*
