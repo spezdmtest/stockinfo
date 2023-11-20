@@ -25,26 +25,26 @@ phases:
       - export PATH=$PWD/:$PATH
       - apt-get update && apt-get -y install jq python3-pip python3-dev && pip3 install --upgrade awscli
 
-pre_build:
-  commands:
+  pre_build:
+    commands:
     - echo "Logging in to Amazon ECR..."
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION| docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
     - login_status=$?
     - echo "Docker login status: $login_status"
     - COMMIT_ID=$(git rev-parse --short HEAD)
 
-build:
-  commands:
+  build:
+    commands:
     - echo Running MVN INSTALL...
-    - pip mvn install
+    - mvn install
     - echo Building the Docker image...
     - docker build -t $ECR_REPO_NAME:$ECR_IMAGE_TAG .
     - docker tag $ECR_REPO_NAME:$ECR_IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$ECR_IMAGE_TAG
     - docker tag $ECR_REPO_NAME:$ECR_IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$COMMIT_ID
 
 
-post_build:
-  commands:
+  post_build:
+    commands:
     - echo Pushing the Docker image...
     - echo AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID
     - echo AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
