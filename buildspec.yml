@@ -36,7 +36,7 @@ pre_build:
 build:
   commands:
     - echo Running MVN INSTALL...
-    - mvn install
+    - pip mvn install
     - echo Building the Docker image...
     - docker build -t $ECR_REPO_NAME:$ECR_IMAGE_TAG .
     - docker tag $ECR_REPO_NAME:$ECR_IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:$ECR_IMAGE_TAG
