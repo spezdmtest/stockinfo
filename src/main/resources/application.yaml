@@ -6,6 +6,12 @@
 scheduling:
   enabled: false
 
+rds:
+  db:
+    url: stockinfo.cowcihafnbsx.eu-central-1.rds.amazonaws.com/stockinfo
+    username: postgres
+    password: asdqwe123
+
 local:
   db:
     url: localhost:5432/stocks-db
