@@ -4,7 +4,7 @@
 #      springframework:
 #        r2dbc: TRACE
 scheduling:
-  enabled: true
+  enabled: false
 
 rds:
   db:
